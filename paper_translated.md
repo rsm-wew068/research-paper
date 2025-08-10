@@ -65,16 +65,18 @@ As mentioned above, the lifecycle of data science can basically be divided into 
 For this reason, this study proposes a step that can combine data science models with decision-making, processing predictive values through reasonable assumptions in company operations. For example, to increase customer repurchase probability, some actions need to be taken: "sending discount coupons of a certain amount," "giving a certain amount for store visits," "collecting points for popular products," "giving products of interest to customer groups on weekends," etc. All such activity combinations must incur monetary costs, meaning these activities must have cost expenditures. Under the consideration of various activity cost expenditures and repurchase probability increases in any feasible combination, we find better combinations to provide important information for subsequent plan design. The concept is shown in Figure 1, using model predictions and some reasonable assumption data from enterprise management to conduct simulation work, finding solutions beneficial to the company under all possible combinations. That is, using three important tasks: assumption, simulation, and optimization to bridge the gap between prediction and decision. This method was conceived to connect the gap between prediction and decision, therefore this study calls this method PAD (Prediction and Decision, PAD).
 
 ![Figure 1: Combining Data Science Models with Decision-Making](images/figure1.jpg)
+
 *Figure 1: The PAD methodology flow showing the connection between prediction and decision through assumption, simulation, and optimization processes*
 
 ### 3.2 PAD Method Steps
 
-After the main function overview of the PAD method proposed by this study, we will introduce a customer transaction dataset PUR collected through the OMO backend as the foundation for PAD method implementation. The implementation details will be explained through seven work items: data organization, data exploration, model building, prediction, business assumptions, simulation optimization, and decision solutions, as shown in Figure 2.
+After the main function overview of the PAD method proposed by this study, we will introduce a customer transaction dataset PUR collected through the OMO backend as the foundation for PAD method implementation. The implementation details will be explained through seven work items: data cleaning, data exploration, model building, prediction, business assumptions, simulation optimization, and decision solutions, as shown in Figure 2.
 
 ![Figure 2: PAD Method Steps](images/figure2.jpg)
-*Figure 2: The seven-step PAD methodology workflow from data organization to decision solutions*
 
-Among them, the data organization work item mainly includes data collection and cleaning mentioned in data science, while the data exploration work item mainly involves grouping customers according to their consumption attributes for observation, using R, F, M three important customer value attributes for grouping here.
+*Figure 2: The seven-step PAD methodology workflow from data cleaning to decision solutions*
+
+Among them, the data cleaning work item mainly includes data collection and cleaning mentioned in data science, while the data exploration work item mainly involves grouping customers according to their consumption attributes for observation, using R, F, M three important customer value attributes for grouping here.
 
 For the model part, we use two methods: simple logistic regression and simple linear regression to build two models. Logistic regression is used to build a customer repurchase prediction model, and simple linear regression is used to build a customer repurchase amount prediction model. Next, using the above two models for prediction, we generate repurchase probability predictions (Rebuy) and repurchase amount predictions (Revenue) for each customer. Then, we substitute the Rebuy and Revenue predictions as parameters into Sunil Gupta's Customer Lifetime Value (CLV) formula and calculate the CLV prediction for each customer.
 
@@ -86,7 +88,7 @@ The entire PAD process starts from data collection and ends with the generation 
 
 ## 4. PAD Method Implementation and Discussion
 
-### 4.1 Data Organization
+### 4.1 Data Cleaning
 
 First, we obtained the customer original order transaction dataset PUR from the OMO platform, totaling over 54,000 records (customer transaction data from six activity periods). After screening, removing outlier data that would affect model prediction, PUR was reduced to 51,000 records, renamed as X_PUR. Next, we converted the transaction data in the X_PUR dataset into one record per customer, generating fields that can evaluate customer value: customer activity r (Recency), customer loyalty f (Frequency), customer contribution m (Monetary), and membership days s (Seniority). The s field represents customer depth, and we also kept the customer ID cid field. There were over 18,000 customer value records, renamed as customer value dataset A_CVM, using this A_CVM dataset as the foundation for the next stage of data exploration.
 
@@ -95,11 +97,13 @@ First, we obtained the customer original order transaction dataset PUR from the 
 This stage involves data exploration, with the main purpose of helping us understand our company's operational status as the foundation for subsequent strategic planning. At the same time, because when we know these things, you can target different groups with different marketing actions. Therefore, this study first uses K-means clustering to group customers. Here, we use the silhouette coefficient to find the optimal number of clusters, as shown in Figure 3, which displays the silhouette coefficient for various K-value scenarios. We use the K value with the highest silhouette coefficient for K-means clustering, suggesting 5 clusters here.
 
 ![Figure 3: Optimal Number of Clusters](images/figure3.jpg)
+
 *Figure 3: Silhouette coefficient analysis showing optimal K=5 for customer clustering*
 
 We set the customer group number to 5 for clustering and discussed the advantages and disadvantages of company operations. The clustering situation is shown in Figure 4: The X-axis represents store visit frequency f, and the Y-axis represents the average customer order value m for each group. Figure 4 shows that there are no customer groups in the upper right corner. We observed that there are three customer groups that are beneficial to the company: the 127-person group with high average customer order value, and the 2,937-person and 1,073-person groups with high store visit frequency. The remaining two groups (8,054-person and 6,226-person groups) are temporarily considered as poorer customer groups because they have low average customer order value and low store visit frequency, plus they haven't visited for a long time (i.e., large Recency values). Through this analysis, enterprises still have room for improvement and enhancement, and can design some marketing plans to move these customer groups to the upper right corner in the future, meaning high average customer order value and high store visit frequency. This is the important insight information we obtained through data exploration, using it as the company's strategic direction.
 
 ![Figure 4: Data Exploration Results](images/figure4.jpg)
+
 *Figure 4: Customer clustering results showing frequency vs. monetary value distribution with 5 customer groups*
 
 In practice, for the convenience of easy identification when designing subsequent marketing plans, we will use another clustering method here. Using customer status that enterprise business teams understand for clustering will be more identifiable and can make the content of each group more stable, not changing the composition rules of each group every time. Through business personnel's daily assessment of their responsible customer interaction situations, we give group labels. Since labeling customer interaction situations is based on some rules discussed by frontline business personnel, this method is called rule-based clustering, which is a rule established internally by the enterprise. The advantage of such clustering is that the collected customer group content data is less affected by the randomness of machine learning methods, and it also allows marketing personnel to quickly grasp the characteristics of each group when designing plans and not be at a loss when formulating subsequent plans. So here we first divide customers into three types: new customers (N), regular customers (R), and sleeping customers (S), described as follows:
@@ -113,9 +117,11 @@ In practice, for the convenience of easy identification when designing subsequen
 After the above actual rule-based clustering, the scale and distribution of each group are shown in Figures 5 and 6.
 
 ![Figure 5: Customer Group Size Distribution](images/figure5.jpg)
+
 *Figure 5: Number of customers in each rule-based customer group (N1, N2, R1, R2, S1, S2, S3)*
 
 ![Figure 6: Customer Group Distribution Analysis](images/figure6.jpg)
+
 *Figure 6: Distribution analysis of customer groups showing their characteristics and proportions*
 
 ### 4.3 Model Building
@@ -125,11 +131,13 @@ First, we use two fields from the customer value dataset A_CVM as target variabl
 Since Rebuy is binary data (repurchased, did not repurchase), after calculation, the model prediction accuracy reached 85.2%, and the area under the ROC curve is 0.88, indicating that this customer repurchase prediction model has very good predictive ability, as shown in Figure 7.
 
 ![Figure 7: ROC Curve Analysis](images/figure7.jpg)
+
 *Figure 7: ROC curve showing model performance with AUC of 0.88 for customer repurchase prediction*
 
 Additionally, since Revenue is numerical purchase amount data, using simple linear regression method, common evaluation indicators include MSE, RMSE, MAE, and R-Squared (R²). After calculation, the model's R-Squared value is as high as 0.713, indicating that this customer repurchase amount prediction model has very good explanatory ability. The distribution of predicted vs. actual values is shown in Figure 8.
 
 ![Figure 8: Regression Analysis Results](images/figure8.jpg)
+
 *Figure 8: Scatter plot showing predicted vs. actual revenue values with R² of 0.713*
 
 ### 4.4 Prediction
@@ -137,19 +145,23 @@ Additionally, since Revenue is numerical purchase amount data, using simple line
 This stage mainly uses the predictions calculated from the two models built in the previous stage, substituting them into the Customer Lifetime Value (CLV) formula proposed by scholar Sunil Gupta, and calculating the N-period CLV prediction for each customer. Sunil Gupta's Customer Lifetime Value (CLV) formula is shown in Figure 9, where ri and mi are provided by the customer repurchase prediction model and customer repurchase amount prediction model from the previous stage, respectively. Then, combined with operating profit margin g (set here as g = 0.5, but can be flexibly modified according to actual conditions) and bank borrowing interest rate d (set here as d = 0.1, but can be flexibly modified according to actual conditions), we calculate the CLV prediction for each customer after N periods. Here, N takes 5 future periods for calculation, so N=5 is substituted into the formula.
 
 ![Figure 9: Customer Lifetime Value Formula](images/figure9.jpg)
+
 *Figure 9: Sunil Gupta's CLV formula showing the mathematical relationship between repurchase probability, revenue, and customer lifetime value*
 
 Next, we examine the distribution of CLV data for all customers, as shown in Figure 10. When the X-axis is between 1.0~2.0, there are more customers. Since the X-axis between 1.0~2.0 here is log-transformed with base 10, the original data should be between 100-200 NTD, meaning most customers' CLV after N=5 periods is between 100-200 NTD.
 
 ![Figure 10: CLV Distribution Analysis](images/figure10.jpg)
+
 *Figure 10: Distribution of Customer Lifetime Value showing concentration between 100-200 NTD for most customers*
 
 Before entering business assumptions, we must first understand the CLV differences among customer groups to seek appropriate methods subsequently. Therefore, we first compare the lifetime value of each customer group using the concept of averages, as shown in Figures 11 and 12. From Figure 12, we can observe the size and distribution of average lifetime value for each group. The R2 group has the highest average lifetime value and will remain an important customer group for the company in the future, requiring senior business personnel supervision and meticulous personalized services with excellent consumption experiences. The second highest is the N2 customer group, which has a high chance of becoming future R2 customer groups, so we should conduct aggressive interactive marketing for this group. The S1, S2, S3 groups have relatively low average lifetime values, but these three groups have quite a few customers with high CLV values, which are also worth the enterprise owner's attention. However, awakening these customers to repurchase requires much effort and cost expenditure to improve repurchase probability.
 
 ![Figure 11: Average CLV by Customer Group](images/figure11.jpg)
+
 *Figure 11: Average Customer Lifetime Value comparison across different customer groups*
 
 ![Figure 12: CLV Box Plot Analysis](images/figure12.jpg)
+
 *Figure 12: Box plot showing CLV distribution and outliers for each customer group*
 
 ### 4.5 Business Assumptions
@@ -157,11 +169,13 @@ Before entering business assumptions, we must first understand the CLV differenc
 Only after selecting customer groups can we enter the true business assumption stage. Otherwise, any business assumptions without target objectives (i.e., customer groups) are unrealistic, as they become self-imagined scenarios, causing data that doesn't conform to reasonable enterprise operations to be set in subsequent model calculations, which cannot operate normally in practice. Since the research object this time is customer value data, the business assumptions in this study are actually finding marketing tools. For example, sending discount coupons of a certain amount is a marketing tool. Here, sending discount coupons of a certain amount is the marketing tool assumption in this study. Different discount amounts will cause different behavioral changes in customer group targets, such as increases or decreases in repurchase probability. Small amounts show no improvement effect, large amounts will have dramatic improvement effects, but when amounts continue to increase to very large levels, according to the law of diminishing marginal returns, limited improvement effects will occur. This phenomenon of input costs and response benefits is like a curved logistic function. Therefore, when selecting business marketing tools, it's like selecting a logistic function, as shown in Figure 13.
 
 ![Figure 13: Cost-Benefit Logistic Function](images/figure13.png)
+
 *Figure 13: Logistic function showing the relationship between marketing cost and repurchase probability improvement*
 
 Continuing from our analysis and understanding of each customer group's CLV in the previous stage, we will select logistic functions suitable for each group's characteristics, testing different cost amounts and observing the repurchase probability improvement situation of customer groups. First, using the R2 customer group as the marketing target, with marketing tool cost (assumed 10 NTD), marketing tool expected benefit (assumed to increase next period's purchase probability to 0.75), we estimate the expected return for this group. The results show, as shown in Figure 14, that the group's average expected return is -10.262 NTD, with overall effect quite unsatisfactory. We suggest only targeting customers with positive returns for subsequent marketing plan targets. We can still select many marketing targets with large expected returns from R2, finding that among the R2 customer group, 258 people have expected returns greater than zero, using these as marketing plan targets. The expected return for these 258 people can reach 6,464 NTD.
 
 ![Figure 14: R2 Customer Group Expected Returns](images/figure14.jpg)
+
 *Figure 14: Expected return analysis for R2 customer group showing negative average returns but positive returns for 258 customers*
 
 ### 4.6 Simulation and Optimization
@@ -169,6 +183,7 @@ Continuing from our analysis and understanding of each customer group's CLV in t
 According to the explanation of selecting marketing tools and business assumptions in the previous stage, we will then conduct extensive calculations for each customer group, but only find customers with positive returns in each customer group for cost-benefit analysis of marketing tools. As shown in Figure 15, we can see that if we conduct marketing plans targeting the S1 customer group, we can also achieve good results, with total expected returns reaching approximately 80,914 NTD in profits.
 
 ![Figure 15: Customer Group ROI Analysis](images/figure15.jpg)
+
 *Figure 15: Return on investment analysis showing S1 customer group achieving 80,914 NTD in expected profits*
 
 ### 4.7 Decision Solutions
