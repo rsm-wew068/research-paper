@@ -36,11 +36,11 @@ This repository contains research on bridging the gap between data science model
 ### Model Performance
 - **Repurchase Prediction**: 85.2% accuracy with ROC AUC of 0.88
 - **Revenue Prediction**: R² value of 0.713
-- **CLV Distribution**: Most customers' 5-period CLV between 100-200 yuan
+- **CLV Distribution**: Most customers' 5-period CLV between 100-200 NTD
 
 ### Business Impact
 - **Targeted Marketing**: Identified 258 high-value customers in R2 group
-- **ROI Optimization**: S1 customer group showed potential for 80,914 yuan profit
+- **ROI Optimization**: S1 customer group showed potential for 80,914 NTD profit
 - **Automated Decision-Making**: Framework enables data-driven marketing strategies
 
 ### Customer Segmentation Results
