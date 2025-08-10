@@ -30,7 +30,6 @@ This repository contains research on bridging the gap between data science model
   - Logistic Regression (85.2% accuracy, ROC AUC: 0.88)
   - Linear Regression (R²: 0.713)
 - **Segmentation**: 7 customer groups (N1, N2, R1, R2, S1, S2, S3)
-```
 
 ## 🔑 Key Findings
 
