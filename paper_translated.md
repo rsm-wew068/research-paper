@@ -139,10 +139,10 @@ This stage mainly uses the predictions calculated from the two models built in t
 ![Figure 9: Customer Lifetime Value Formula](images/figure9.jpg)
 *Figure 9: Sunil Gupta's CLV formula showing the mathematical relationship between repurchase probability, revenue, and customer lifetime value*
 
-Next, we examine the distribution of CLV data for all customers, as shown in Figure 10. When the X-axis is between 1.0~2.0, there are more customers. Since the X-axis between 1.0~2.0 here is log-transformed with base 10, the original data should be between 100-200 yuan, meaning most customers' CLV after N=5 periods is between 100-200 yuan.
+Next, we examine the distribution of CLV data for all customers, as shown in Figure 10. When the X-axis is between 1.0~2.0, there are more customers. Since the X-axis between 1.0~2.0 here is log-transformed with base 10, the original data should be between 100-200 NTD, meaning most customers' CLV after N=5 periods is between 100-200 NTD.
 
 ![Figure 10: CLV Distribution Analysis](images/figure10.jpg)
-*Figure 10: Distribution of Customer Lifetime Value showing concentration between 100-200 yuan for most customers*
+*Figure 10: Distribution of Customer Lifetime Value showing concentration between 100-200 NTD for most customers*
 
 Before entering business assumptions, we must first understand the CLV differences among customer groups to seek appropriate methods subsequently. Therefore, we first compare the lifetime value of each customer group using the concept of averages, as shown in Figures 11 and 12. From Figure 12, we can observe the size and distribution of average lifetime value for each group. The R2 group has the highest average lifetime value and will remain an important customer group for the company in the future, requiring senior business personnel supervision and meticulous personalized services with excellent consumption experiences. The second highest is the N2 customer group, which has a high chance of becoming future R2 customer groups, so we should conduct aggressive interactive marketing for this group. The S1, S2, S3 groups have relatively low average lifetime values, but these three groups have quite a few customers with high CLV values, which are also worth the enterprise owner's attention. However, awakening these customers to repurchase requires much effort and cost expenditure to improve repurchase probability.
 
@@ -159,17 +159,17 @@ Only after selecting customer groups can we enter the true business assumption s
 ![Figure 13: Cost-Benefit Logistic Function](images/figure13.png)
 *Figure 13: Logistic function showing the relationship between marketing cost and repurchase probability improvement*
 
-Continuing from our analysis and understanding of each customer group's CLV in the previous stage, we will select logistic functions suitable for each group's characteristics, testing different cost amounts and observing the repurchase probability improvement situation of customer groups. First, using the R2 customer group as the marketing target, with marketing tool cost (assumed 10 yuan), marketing tool expected benefit (assumed to increase next period's purchase probability to 0.75), we estimate the expected return for this group. The results show, as shown in Figure 14, that the group's average expected return is -10.262 yuan, with overall effect quite unsatisfactory. We suggest only targeting customers with positive returns for subsequent marketing plan targets. We can still select many marketing targets with large expected returns from R2, finding that among the R2 customer group, 258 people have expected returns greater than zero, using these as marketing plan targets. The expected return for these 258 people can reach 6,464 yuan.
+Continuing from our analysis and understanding of each customer group's CLV in the previous stage, we will select logistic functions suitable for each group's characteristics, testing different cost amounts and observing the repurchase probability improvement situation of customer groups. First, using the R2 customer group as the marketing target, with marketing tool cost (assumed 10 NTD), marketing tool expected benefit (assumed to increase next period's purchase probability to 0.75), we estimate the expected return for this group. The results show, as shown in Figure 14, that the group's average expected return is -10.262 NTD, with overall effect quite unsatisfactory. We suggest only targeting customers with positive returns for subsequent marketing plan targets. We can still select many marketing targets with large expected returns from R2, finding that among the R2 customer group, 258 people have expected returns greater than zero, using these as marketing plan targets. The expected return for these 258 people can reach 6,464 NTD.
 
 ![Figure 14: R2 Customer Group Expected Returns](images/figure14.jpg)
 *Figure 14: Expected return analysis for R2 customer group showing negative average returns but positive returns for 258 customers*
 
 ### 4.6 Simulation and Optimization
 
-According to the explanation of selecting marketing tools and business assumptions in the previous stage, we will then conduct extensive calculations for each customer group, but only find customers with positive returns in each customer group for cost-benefit analysis of marketing tools. As shown in Figure 15, we can see that if we conduct marketing plans targeting the S1 customer group, we can also achieve good results, with total expected returns reaching approximately 80,914 yuan in profits.
+According to the explanation of selecting marketing tools and business assumptions in the previous stage, we will then conduct extensive calculations for each customer group, but only find customers with positive returns in each customer group for cost-benefit analysis of marketing tools. As shown in Figure 15, we can see that if we conduct marketing plans targeting the S1 customer group, we can also achieve good results, with total expected returns reaching approximately 80,914 NTD in profits.
 
 ![Figure 15: Customer Group ROI Analysis](images/figure15.jpg)
-*Figure 15: Return on investment analysis showing S1 customer group achieving 80,914 yuan in expected profits*
+*Figure 15: Return on investment analysis showing S1 customer group achieving 80,914 NTD in expected profits*
 
 ### 4.7 Decision Solutions
 
